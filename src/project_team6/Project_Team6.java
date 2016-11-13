@@ -1,6 +1,6 @@
 package project_team6;
 
-import API.AdminSensorManagement;
+import API.*;
 import sensorManagement.SensorManagement;
 import API.removePhysicalSensor;
 import org.restlet.Application;
@@ -29,6 +29,9 @@ public class Project_Team6 extends Application {
         router.attach("/AddUser", AddUser.class);
         router.attach("/RemoveUser", RemoveUser.class);
         router.attach("/GetAllUsers", GetAllUsers.class);
+        router.attach("/ProcureSensors", ProcureSensors.class);
+        router.attach("/ReleaseSensor", ReleaseSensor.class);
+        router.attach("/GetListOfPhysicalSensors", GetListOfPhysicalSensors.class);
 
         return router;
     }

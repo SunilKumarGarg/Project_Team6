@@ -8,6 +8,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import sensors.*;
 
@@ -17,6 +18,55 @@ import sensors.*;
  */
 public class SensorDatabaseManagement 
 {
+    public void Clean()
+    {
+        try
+        {
+        MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+
+        // Now connect to your databases
+        DB db = mongoClient.getDB( "sensorDatabase" );
+        DBCollection table = db.getCollection("sensors");
+        table.drop();
+        
+        db = mongoClient.getDB( "userDatabase" );
+        table = db.getCollection("user");
+        table.drop();
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
+    
+    public void updateSensor(AnimalBodySensor p)
+    {
+        try
+        {
+            MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+
+            // Now connect to your databases
+            DB db = mongoClient.getDB( "sensorDatabase" );
+            DBCollection table = db.getCollection("sensors");
+            
+            BasicDBObject query = new BasicDBObject();
+            query.put("ID", p.getID());
+            
+            BasicDBObject document = new BasicDBObject();
+            
+            document.put("ID", p.getID());
+            document.put("name", p.getName());
+            document.put("age", p.getAge());
+            document.put("type", p.getType());
+            document.put("number_user", p.getNumberUser());
+            
+            table.update(query, document);
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
     
     public void addPhysicalSensor(AnimalBodySensor p)
     {
@@ -35,6 +85,7 @@ public class SensorDatabaseManagement
         document.put("name", p.getName());
         document.put("age", p.getAge());
         document.put("type", p.getType());
+        document.put("number_user", 0);
         
 	table.insert(document);       
 			

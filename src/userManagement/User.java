@@ -42,6 +42,21 @@ public class User {
         sensorList.add(s);
     }
     
+    public void removeSensors(List<AnimalBodySensor> s)
+    {
+        for(int i = 0; i < s.size(); i++)
+        {
+            for(int j = 0; j < sensorList.size(); j++)
+            {
+                if(sensorList.get(j).getID() == s.get(i).getID())
+                {
+                    sensorList.remove(j);
+                    break;
+                }
+            }
+        }
+    }
+    
     public void removeSensor(int n)
     {
         for(int i = 0; i < sensorList.size(); i++)

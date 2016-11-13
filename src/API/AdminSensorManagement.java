@@ -50,6 +50,7 @@ public class AdminSensorManagement extends ServerResource
                     jo.put("name", sensorList.get(i).getName());
                     jo.put("age", sensorList.get(i).getAge());
                     jo.put("type", sensorList.get(i).getType());
+                    jo.put("number_user", sensorList.get(i).getNumberUser());
                     ja.put(jo);
             }
 

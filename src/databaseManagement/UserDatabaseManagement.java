@@ -21,6 +21,32 @@ import userManagement.User;
  */
 public class UserDatabaseManagement {
     
+    public void updateSensor(User u)
+    {
+        try
+        {
+            MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+
+            // Now connect to your databases
+            DB db = mongoClient.getDB( "userDatabase" );
+            DBCollection table = db.getCollection("user"); 
+            
+            BasicDBObject query = new BasicDBObject();
+            query.put("name", u.getName());
+
+            BasicDBObject document = new BasicDBObject();
+            document.put("name", u.getName());
+            BasicDBList dbSensorList = mapSensors(u.getSensors());
+            document.append("push", new BasicDBObject("sensors", dbSensorList));
+
+            table.update(query, document);       
+
+        }
+        catch(Exception e)
+        {            
+        }
+    }
+    
     public void addUser(User u)
     {
         try
@@ -95,6 +121,7 @@ public class UserDatabaseManagement {
           dbSensor.append("id", sensor.getID());
           dbSensor.append("age", sensor.getAge());
           dbSensor.append("type", sensor.getType());
+          dbSensor.append("number_user", sensor.getNumberUser());
           result.add(dbSensor);
         }
 

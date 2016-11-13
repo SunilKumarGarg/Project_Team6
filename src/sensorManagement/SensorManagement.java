@@ -33,6 +33,7 @@ public class SensorManagement
                     {
                         sensor.add(sensorList.get(i));
                         sensorList.get(i).increaseNumberUser();
+                        database.updateSensor(sensorList.get(i));
                     }
                     break;
                 }
@@ -49,7 +50,8 @@ public class SensorManagement
                 {
                     if(sensors.get(i).getID() == sensorList.get(j).getID())
                     {
-                        sensorList.get(i).decreaseNumberUser();
+                        sensorList.get(j).decreaseNumberUser();
+                        database.updateSensor(sensorList.get(j));
                         break;
                     }
                 }
@@ -94,6 +96,7 @@ public class SensorManagement
         
         public void initialize()
         {
+            //database.Clean();
             DBCursor cursor = database.getAllPhysicalSensor();
             if(cursor.hasNext())
             {            
@@ -105,6 +108,7 @@ public class SensorManagement
                     s.setName(obj.get("name").toString());
                     s.setAge(Integer.parseInt(obj.get("age").toString()));
                     s.setType(Integer.parseInt(obj.get("type").toString()));
+                    s.setNumberOfUser(Integer.parseInt(obj.get("number_user").toString()));
                     sensorList.add(s);
                 }  
                 

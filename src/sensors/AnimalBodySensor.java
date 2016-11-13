@@ -46,6 +46,11 @@ public class AnimalBodySensor implements Comparable<AnimalBodySensor>{
         return nNumberUser;
     }
     
+    public void setNumberOfUser(int n)
+    {
+        nNumberUser = n;
+    }
+    
     public int getID()
     {
         return ID;
