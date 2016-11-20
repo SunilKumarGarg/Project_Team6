@@ -14,6 +14,7 @@ import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
+import sensors.AnimalBodySensor;
 import userManagement.User;
 import userManagement.UserManager;
 
@@ -21,10 +22,10 @@ import userManagement.UserManager;
  *
  * @author sunil
  */
-public class AddUser extends ServerResource {
+public class GetUserSensorWaitage extends ServerResource {
     
     @Post
-    public Representation addUser(Representation entity)
+    public Representation getUserSensorWaitage(Representation entity)
     {
         Form form = new Form(entity);
         String szName = form.getFirstValue("name");
@@ -33,18 +34,28 @@ public class AddUser extends ServerResource {
         user.setName(szName);
         
         JSONObject obj = new JSONObject();
-        obj.put("Result", UserManager.getInstance().addUser(user));
         
         List<User> userList = UserManager.getInstance().getListofUsers();
-        JSONArray ja = new JSONArray();
+        
         for(int i = 0; i < userList.size(); i++)
-        {
-                JSONObject jo = new JSONObject();
-                jo.put("User", userList.get(i).getName());
-                ja.put(jo);
+        {            
+            if(userList.get(i).getName().compareToIgnoreCase(szName) == 0)   
+            {
+                List<AnimalBodySensor> sensorList = userList.get(i).getUniqueSensorList();
+                JSONArray ja1 = new JSONArray();
+                
+                for(int j = 0; j < sensorList.size(); j++)
+                {
+                        JSONObject jo1 = new JSONObject();
+                        jo1.put("label", sensorList.get(j).getName());
+                        jo1.put("value", sensorList.get(j).getNumberUser());
+                        ja1.put(jo1);
+                }
+                obj.put("Sensors", ja1);
+                break;
+            }
         }
-
-        obj.put("Users", ja);
+        
 
         return new JsonRepresentation(obj);
     }

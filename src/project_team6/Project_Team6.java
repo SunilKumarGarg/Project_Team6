@@ -11,6 +11,9 @@ import org.restlet.Component;
 import API.AddUser;
 import API.GetAllUsers;
 import API.RemoveUser;
+import java.util.Arrays;
+import java.util.HashSet;
+import org.restlet.service.CorsService;
 import userManagement.UserManager;
 
 public class Project_Team6 extends Application {
@@ -32,7 +35,13 @@ public class Project_Team6 extends Application {
         router.attach("/ProcureSensors", ProcureSensors.class);
         router.attach("/ReleaseSensor", ReleaseSensor.class);
         router.attach("/GetListOfPhysicalSensors", GetListOfPhysicalSensors.class);
-
+        router.attach("/GetBillingInformation", GetBillingInformation.class);
+        router.attach("/GetUser", GetUser.class);
+        router.attach("/GetUserSensorWaitage", GetUserSensorWaitage.class);
+        router.attach("/GetUserSensorsCount", GetUserSensorsCount.class);
+        router.attach("/GetListofPhysicalSensorUsage", GetListofPhysicalSensorUsage.class);
+        router.attach("/GetNumberOfPhysicalSensorByType", GetNumberOfPhysicalSensorByType.class);
+        
         return router;
     }
     
@@ -49,6 +58,10 @@ public class Project_Team6 extends Application {
             new Project_Team6());
 
         // Start the component.  
+        CorsService corsService = new CorsService();         
+        corsService.setAllowedOrigins(new HashSet(Arrays.asList("*")));
+        corsService.setAllowedCredentials(true);
+        component.getServices().add(corsService);
         component.start();
         SensorManagement.getInstance().initialize();
         UserManager.getInstance().initialize();

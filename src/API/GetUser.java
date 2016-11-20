@@ -21,7 +21,7 @@ import userManagement.UserManager;
  *
  * @author sunil
  */
-public class AddUser extends ServerResource {
+public class GetUser extends ServerResource {
     
     @Post
     public Representation addUser(Representation entity)
@@ -33,18 +33,18 @@ public class AddUser extends ServerResource {
         user.setName(szName);
         
         JSONObject obj = new JSONObject();
-        obj.put("Result", UserManager.getInstance().addUser(user));
         
         List<User> userList = UserManager.getInstance().getListofUsers();
-        JSONArray ja = new JSONArray();
+        
         for(int i = 0; i < userList.size(); i++)
-        {
-                JSONObject jo = new JSONObject();
-                jo.put("User", userList.get(i).getName());
-                ja.put(jo);
+        {            
+            if(userList.get(i).getName().compareToIgnoreCase(szName) == 0)   
+            {
+                obj.put("Sensors", userList.get(i).getSensors());
+                break;
+            }
         }
-
-        obj.put("Users", ja);
+        
 
         return new JsonRepresentation(obj);
     }

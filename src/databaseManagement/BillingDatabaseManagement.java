@@ -5,22 +5,145 @@
  */
 package databaseManagement;
 
-import com.mongodb.BasicDBList;
+import billingMonitoring.UserBillingData;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
  * @author sunil
  */
 public class BillingDatabaseManagement {
+    
+    public JSONArray getAllBillInformation()
+    {
+        JSONArray ja = new JSONArray();
+        try
+        {
+            MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+
+            // Now connect to your databases
+            DB db = mongoClient.getDB( "BillingDatabase" );
+            DBCollection table = db.getCollection("BillInfo");
+            long timeToStart = ( System.currentTimeMillis() - (15*24*60*60*1000));
+            
+            BasicDBObject query = new BasicDBObject();                 
+            
+            List<BasicDBObject> orQuery = new ArrayList<BasicDBObject>();
+            
+            orQuery.add(new BasicDBObject("end_time", new BasicDBObject("$gt",timeToStart)));
+            orQuery.add(new BasicDBObject("running", 1));
+            query.put("$or", orQuery);            
+            
+            DBCursor cursor = table.find(query);        
+            
+            List<UserBillingData> userBill = new ArrayList();
+            while(cursor.hasNext())
+            {    
+                JSONObject obj = new JSONObject();
+                DBObject dbObj = cursor.next();
+                
+                for(int i=0; i < userBill.size() ; i++)
+                {
+                    String sensor = dbObj.get("sensor").toString();
+                    String[] sens = sensor.split("_");
+                    int nSensorType = Integer.parseInt(sens[0]);
+                    
+                    if(userBill.get(i).userName.compareToIgnoreCase(dbObj.get("user_name").toString()) == 0)
+                    {
+                        userBill.get(i).nSensorCount[nSensorType] += Integer.parseInt(dbObj.get("number").toString());
+                    }
+                    else
+                    {
+                        UserBillingData u = new UserBillingData();
+                        u.nSensorCount[nSensorType] = Integer.parseInt(dbObj.get("number").toString());
+                        userBill.add(u);
+                    }
+                }                 
+            }  
+            
+            
+            
+        }
+        catch(Exception e)
+        {            
+        }
+        return ja;
+    }
+    
+    
+    public JSONArray getBillInformation(String userName, int ndays)
+    {
+        JSONArray ja = new JSONArray();
+        try
+        {
+            MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+
+            // Now connect to your databases
+            DB db = mongoClient.getDB( "BillingDatabase" );
+            DBCollection table = db.getCollection("BillInfo");
+            long timeToStart = ( System.currentTimeMillis() - (ndays*24*60*60*1000));
+            
+            BasicDBObject query = new BasicDBObject();
+            query.put("user_name", userName);      
+            
+            List<BasicDBObject> orQuery = new ArrayList<BasicDBObject>();
+            
+            orQuery.add(new BasicDBObject("end_time", new BasicDBObject("$gt",timeToStart)));
+            orQuery.add(new BasicDBObject("running", 1));
+            query.put("$or", orQuery);            
+            
+            DBCursor cursor = table.find(query);        
+            
+            
+            while(cursor.hasNext())
+            {    
+                JSONObject obj = new JSONObject();
+                DBObject dbObj = cursor.next();
+                String sensor = dbObj.get("sensor").toString();
+                String[] sens = sensor.split("_");
+                obj.put("type", sens[0]);
+                obj.put("age", sens[1]);
+                obj.put("userName", dbObj.get("user_name"));
+                obj.put("sensor", dbObj.get("sensor"));
+                obj.put("number", dbObj.get("number"));
+                obj.put("start_time", dbObj.get("start_time"));
+                obj.put("end_time", dbObj.get("end_time")); 
+                
+                long et = obj.getLong("end_time");
+                if(et == 0)
+                    obj.put("end_Date", "");
+                else
+                    obj.put("end_Date", new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date(et)));
+                
+                et = obj.getLong("start_time");
+                if(et == 0)
+                    obj.put("start_Date", "");
+                else
+                    obj.put("start_Date", new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date(et)));
+                
+                ja.put(obj);                   
+            }  
+            
+        }
+        catch(Exception e)
+        {            
+        }
+        return ja;
+    }
     
     public void procureSensors(String userName, HashMap hm)
     {

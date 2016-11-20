@@ -21,6 +21,18 @@ public class SensorManagement
       		return instance;
    	}
         
+        public AnimalBodySensor getUpdateSensorData(int d)
+        {
+            for(int i =0; i < sensorList.size(); i++)
+            {
+                if(sensorList.get(i).getID() == d)
+                {
+                    return sensorList.get(i);
+                }
+            }
+            return null;
+        }
+        
         public List<AnimalBodySensor> procureSensors(int nType, int nAge, int num)
         {
             List<AnimalBodySensor> sensor = new ArrayList();
@@ -31,8 +43,8 @@ public class SensorManagement
                 {
                     for(int j = 0; j < num; j++)
                     {
-                        sensor.add(sensorList.get(i));
                         sensorList.get(i).increaseNumberUser();
+                        sensor.add(sensorList.get(i));                        
                         database.updateSensor(sensorList.get(i));
                     }
                     break;

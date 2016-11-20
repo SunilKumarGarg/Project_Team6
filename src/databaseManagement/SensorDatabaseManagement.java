@@ -32,6 +32,10 @@ public class SensorDatabaseManagement
         db = mongoClient.getDB( "userDatabase" );
         table = db.getCollection("user");
         table.drop();
+        
+        db = mongoClient.getDB( "BillingDatabase" );
+        table = db.getCollection("BillInfo");
+        table.drop();
         }
         catch(Exception e)
         {

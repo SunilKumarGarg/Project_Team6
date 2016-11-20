@@ -52,6 +52,6 @@ public class GetAllUsers extends ServerResource{
 
         obj.put("Users", ja);
 
-        return new JsonRepresentation(obj);
+        return new JsonRepresentation(ja);
     }    
 }

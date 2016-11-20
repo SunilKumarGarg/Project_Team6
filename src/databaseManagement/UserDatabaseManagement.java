@@ -101,7 +101,6 @@ public class UserDatabaseManagement {
             MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
             DB db = mongoClient.getDB( "userDatabase" );
             DBCollection table = db.getCollection("user");
-            //table.drop();
             return table.find();
         }
         catch(Exception e)
