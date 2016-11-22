@@ -41,6 +41,9 @@ public class Project_Team6 extends Application {
         router.attach("/GetUserSensorsCount", GetUserSensorsCount.class);
         router.attach("/GetListofPhysicalSensorUsage", GetListofPhysicalSensorUsage.class);
         router.attach("/GetNumberOfPhysicalSensorByType", GetNumberOfPhysicalSensorByType.class);
+        router.attach("/GetNumberOfVirtualSensorByType", GetNumberOfVirtualSensorByType.class);
+        router.attach("/GetListofPhysicalSensorWithData", GetListofPhysicalSensorWithData.class);
+        router.attach("/GetClusterRevenueInfo", GetClusterRevenueInfo.class);
         
         return router;
     }

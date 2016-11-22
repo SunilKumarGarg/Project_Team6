@@ -11,9 +11,9 @@ package sensors;
  */
 public class AnimalBodySensor implements Comparable<AnimalBodySensor>{
     private int ID;
-    private TempSensor tempSensor;
-    private SpeedSensor speedSensor;
-    private HeartRateSensor heartRateSensor;
+    private TempSensor tempSensor = new TempSensor();
+    private SpeedSensor speedSensor = new SpeedSensor();
+    private HeartRateSensor heartRateSensor = new HeartRateSensor();
     private String szName;
     private int nAge;
     private int nType;

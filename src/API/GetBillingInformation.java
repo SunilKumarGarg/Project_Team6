@@ -43,7 +43,6 @@ public class GetBillingInformation extends ServerResource
             JSONArray ja1 = new JSONArray();
             double nTotalAmount = 0;
             double nDiscount = 0;
-            double nTotalAfterDiscount =0;
             for(int i = 0; i < ja.length(); i++)
             {
                 obj1 = ja.getJSONObject(i);
